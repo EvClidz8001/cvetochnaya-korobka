@@ -1,0 +1,2991 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Цветочная коробка</title>
+    <!-- Яндекс.Карты -->
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=ваш_API_ключ&lang=ru_RU" type="text/javascript"></script>
+    <style>
+        /* ===== ПОДКЛЮЧЕНИЕ ШРИФТОВ ===== */
+        @font-face {
+            font-family: 'Poppins-Light';
+            font-style: normal;
+            font-weight: 300;
+            src: url(../font/Poppins-Light_1.ttf) format('truetype');
+        }
+        @font-face {
+            font-family: 'Poppins-Light Italic';
+            font-style: italic;
+            font-weight: 300;
+            src: url(../font/Poppins-LightItalic_1.ttf) format('truetype');
+        }
+        @font-face {
+            font-family: 'Poppins-Regular';
+            font-style: normal;
+            font-weight: 400;
+            src: url(../font/Poppins-Regular_6.ttf) format('truetype');
+        }
+        @font-face {
+            font-family: 'Poppins-Thin Italic';
+            font-style: italic;
+            font-weight: 250;
+            src: url(../font/Poppins-ThinItalic_1.ttf) format('truetype');
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins-Light', sans-serif;
+            background-color: #ffeef1;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ===== ХЕДЕР С РОЗОВЫМ ФОНОМ ===== */
+        .hero {
+            background: linear-gradient(135deg, #efc6c6 0%, #d6a8a8 100%);
+            padding: 25px 40px 100px 40px;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: visible;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255,182,193,0.3) 0%, rgba(255,182,193,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            left: -80px;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(255,200,210,0.3) 0%, rgba(255,200,210,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* ===== ВЕРХНЯЯ ПАНЕЛЬ ===== */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            position: relative;
+            z-index: 10;
+            margin-bottom: 40px;
+        }
+
+        .menu-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+        }
+
+        .menu-icon {
+            width: 45px;
+            height: 45px;
+            margin-left: -20px;
+            margin-bottom: 60px;
+            border-radius: 50%;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .menu-icon:hover {
+            transform: scale(1.01);
+        }
+
+        .menu-text {
+            font-size: 22px;
+            font-family: 'Poppins-Thin Italic', sans-serif;
+            color: #333;
+            cursor: pointer;
+            transition: opacity 0.3s;
+            margin: 50px;
+        }
+
+        .menu-text:hover {
+            opacity: 0.7;
+        }
+
+        /* НАВИГАЦИЯ */
+        .nav-links {
+            display: flex;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            font-size: 32px;
+            font-family: 'Poppins-Light', sans-serif;
+            color: #222;
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #ff3083;
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #ff3083;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .icons-area {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .logo-img {
+            height: 45px;
+            width: auto;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-placeholder {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #ff9a9e, #ff6b8b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: transform 0.3s;
+        }
+
+        .logo-placeholder:hover {
+            transform: scale(1.1);
+        }
+
+        .icon-circle {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 22px;
+            position: relative;
+        }
+
+        .icon-circle:hover {
+            background: white;
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .cart {
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff3083;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Poppins-Regular', sans-serif;
+        }
+
+        /* ===== ЗАГОЛОВОК ===== */
+        .title-block {
+            text-align: center;
+            margin: 40px 0 30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .main-title {
+            font-size: clamp(40px, 8vw, 80px);
+            font-family: 'Poppins-Light Italic', sans-serif;
+            color: #222;
+            letter-spacing: 4px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: clamp(18px, 4vw, 32px);
+            font-family: 'Poppins-Light Italic', sans-serif;
+            color: #555;
+            margin-top: 15px;
+        }
+
+        .call-btn-wrapper {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0 50px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .call-btn {
+            background: white;
+            border: none;
+            padding: 16px 50px;
+            border-radius: 60px;
+            font-size: 28px;
+            font-family: 'Poppins-Light Italic', sans-serif;
+            color: #ff3083;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .call-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 35px rgba(255, 48, 131, 0.25);
+        }
+
+        /* Фильтр категорий: одна строка; на узком экране — горизонтальная прокрутка */
+        .categories {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            gap: clamp(6px, 1.4vw, 18px);
+            position: relative;
+            z-index: 10;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x proximity;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 48, 131, 0.45) transparent;
+            padding: 6px 2px 14px;
+        }
+
+        .categories::-webkit-scrollbar {
+            height: 5px;
+        }
+
+        .categories::-webkit-scrollbar-thumb {
+            background: rgba(255, 48, 131, 0.35);
+            border-radius: 10px;
+        }
+
+        .category-btn {
+            flex: 0 0 auto;
+            scroll-snap-align: start;
+            white-space: nowrap;
+            background: white;
+            border: none;
+            padding: clamp(10px, 2vw, 18px) clamp(14px, 2.8vw, 36px);
+            border-radius: 60px;
+            font-size: clamp(12px, 2.05vw, 22px);
+            font-family: 'Poppins-Light Italic', sans-serif;
+            color: #ff3083;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .category-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 30px rgba(255, 48, 131, 0.2);
+        }
+
+        @media (min-width: 1100px) {
+            .categories {
+                justify-content: center;
+                overflow-x: visible;
+            }
+        }
+
+        .flowers-decor {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .flower {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #ffb6c1, #ff69b4);
+            border-radius: 50%;
+            animation: float 4s infinite ease-in-out;
+        }
+
+        .flower:nth-child(2) { animation-delay: 1s; width: 45px; height: 45px; background: radial-gradient(circle, #fbc2eb, #a6c1ee); }
+        .flower:nth-child(3) { animation-delay: 2s; width: 70px; height: 70px; }
+        .flower:nth-child(4) { animation-delay: 0.5s; width: 50px; height: 50px; }
+        .flower:nth-child(5) { animation-delay: 1.5s; width: 55px; height: 55px; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* ===== БУРГЕР-МЕНЮ (НОВОЕ) ===== */
+        .burger {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .burger span {
+            width: 30px;
+            height: 3px;
+            background: #333;
+            transition: 0.3s;
+        }
+
+        /* ===== СЛАЙДЕР ===== */
+        .slider-container {
+            max-width: auto;
+            margin: 30px auto;
+            position: relative;
+            border-radius: 30px;
+            overflow: hidden;
+        }
+
+        .slider {
+            width: auto;
+            height: auto;
+            overflow: hidden;
+        }
+
+        .slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            flex: 0 0 50%;
+            box-sizing: border-box;
+            padding: 0 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide img {
+            width: auto;
+            height: auto;
+            object-fit: cover;
+            border-radius: 20px;
+            display: block;
+            position: relative;
+        }
+
+        .slide-caption {
+            text-align: center;
+            padding: 15px 10px;
+            font-size: 18px;
+            font-family: 'Poppins-Light Italic', sans-serif;
+            color: #ff3083;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            margin-top: 12px;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 30px;
+            font-weight: bold;
+            color: #ff3083;
+            z-index: 10;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+        }
+
+        .slider-btn:hover {
+            background: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .slider-btn.prev {
+            left: 15px;
+        }
+
+        .slider-btn.next {
+            right: 15px;
+        }
+
+        .slider-dots {
+            text-align: center;
+            padding: 15px 0;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: #ffb6c1;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: #ff3083;
+            width: 30px;
+            border-radius: 10px;
+        }
+
+        /* ===== СЕКЦИЯ С КАРТОЙ (НОВАЯ) ===== */
+        .map-section {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 30px;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 30px;
+        }
+
+        .map-info {
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 32px 34px;
+            border-radius: 30px;
+            box-shadow: 0 8px 32px rgba(255, 48, 131, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+        }
+
+        .map-info h3 {
+            font-size: 30px;
+            color: #ff3083;
+            margin-bottom: 20px;
+            font-family: 'Poppins-Light Italic', sans-serif;
+        }
+
+        .map-info p {
+            font-size: 17px;
+            color: #5a3d45;
+            margin-bottom: 14px;
+            line-height: 1.65;
+        }
+
+        .map-info .address {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff3083;
+            margin: 20px 0;
+        }
+
+        .map-container {
+            height: 400px;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ===== НОВЫЕ СЕКЦИИ (фон на всю ширину экрана) ===== */
+        .new-sections {
+            background: transparent;
+            padding: 32px 0 56px;
+            width: 100%;
+        }
+
+        .info-section-outer {
+            position: relative;
+            width: 100%;
+            max-width: none;
+            margin: 0 0 36px;
+            padding: 44px clamp(16px, 4vw, 48px);
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: 0 14px 52px rgba(200, 100, 140, 0.08);
+        }
+
+        .info-section-outer::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            min-height: 100%;
+            z-index: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .info-section-outer--reasons::before {
+            background-image:
+                linear-gradient(165deg, rgba(255, 250, 252, 0.93) 0%, rgba(255, 236, 242, 0.88) 45%, rgba(255, 245, 248, 0.92) 100%),
+                url('image/section-bg-reasons.png');
+        }
+
+        .info-section-outer--process::before {
+            background-image:
+                linear-gradient(165deg, rgba(255, 250, 252, 0.91) 0%, rgba(255, 240, 245, 0.89) 100%),
+                url('image/section-bg-process.png');
+        }
+
+        .info-section-outer--reviews::before {
+            background-image:
+                linear-gradient(165deg, rgba(255, 252, 254, 0.92) 0%, rgba(255, 236, 242, 0.9) 100%),
+                url('image/section-bg-reviews.png');
+        }
+
+        .info-section-outer > .info-section {
+            position: relative;
+            z-index: 1;
+            margin: 0 auto;
+        }
+
+        .info-section {
+            max-width: 1400px;
+            margin: 0 auto 44px;
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 40px;
+            padding: 46px 38px;
+            box-shadow: 0 8px 40px rgba(255, 48, 131, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.92);
+        }
+
+        .info-section-outer .info-section {
+            margin-bottom: 0;
+        }
+
+        .info-title {
+            font-size: clamp(29px, 4.2vw, 40px);
+            font-family: 'Poppins-Light Italic', sans-serif;
+            color: #e91e7a;
+            text-align: center;
+            margin-bottom: 36px;
+            letter-spacing: 0.03em;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.72);
+            border-radius: 25px;
+            padding: 26px 28px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255, 182, 193, 0.35);
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-card h3 {
+            font-size: 26px;
+            color: #e91e7a;
+            margin-bottom: 16px;
+        }
+
+        .info-card ul {
+            list-style: none;
+        }
+
+        .info-card li {
+            padding: 11px 0;
+            border-bottom: 1px solid rgba(255, 182, 193, 0.45);
+            font-size: 16.5px;
+            line-height: 1.58;
+            color: #5c3d4a;
+        }
+
+        .review-stars {
+            color: #FFD700;
+            font-size: 20px;
+            letter-spacing: 3px;
+            margin: 10px 0;
+        }
+
+        .review-author {
+            font-weight: bold;
+            color: #ff3083;
+            margin-top: 12px;
+            font-size: 16px;
+        }
+
+        .review-text {
+            font-style: italic;
+            color: #5c4550;
+            line-height: 1.65;
+            font-size: 15.5px;
+        }
+
+        .marquee-container {
+            width: 100%;
+            overflow: hidden;
+            background: #ff3083;
+            padding: 15px 0;
+            margin: 20px 0;
+            white-space: nowrap;
+        }
+
+        .marquee-text {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 20s linear infinite;
+            font-size: 24px;
+            font-family: 'Poppins-Light Italic', sans-serif;
+            color: white;
+            letter-spacing: 2px;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* ===== КАТАЛОГ ТОВАРОВ ===== */
+        .catalog-section {
+            padding: 64px 40px 72px;
+            background: rgba(255, 248, 250, 0.42);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(36px, 5.2vw, 52px);
+            font-family: 'Poppins-Light Italic', sans-serif;
+            color: #3d2a32;
+            margin-bottom: 48px;
+            letter-spacing: 0.04em;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 8px 28px rgba(80, 40, 60, 0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #ffe0e0, #ffd4d4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 28px;
+            color: #ff3083;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .product-desc {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .buy-btn {
+            background: linear-gradient(135deg, #ff9a9e, #ff6b8b);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            font-family: 'Poppins-Regular', sans-serif;
+            transition: transform 0.3s;
+        }
+
+        .buy-btn:hover {
+            transform: scale(1.02);
+        }
+
+        /* ===== МОДАЛЬНЫЕ ОКНА ===== */
+        .auth-modal, .checkout-modal, .favorites-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .auth-modal.active, .checkout-modal.active, .favorites-modal.active {
+            display: flex;
+        }
+
+        .auth-modal-content, .checkout-content, .favorites-content {
+            background: #ffffff;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+        }
+
+        .checkout-content {
+            max-width: 720px;
+        }
+
+        .checkout-body {
+            background: #ffffff;
+            padding: 24px 28px 32px;
+        }
+
+        /* Корзина и «Вам понравилось»: белый фон, ввод — розовый */
+        .checkout-modal .checkout-content,
+        .checkout-modal .checkout-body,
+        .favorites-modal .favorites-content,
+        .favorites-modal .favorites-body {
+            background: #ffffff;
+        }
+
+        .checkout-modal .checkout-body {
+            color: #ad1457;
+        }
+
+        .checkout-modal .quantity-btn,
+        .checkout-modal .remove-item,
+        .checkout-modal .checkout-final-btn,
+        .checkout-modal .cart-items .auth-submit-btn {
+            color: #fff !important;
+        }
+
+        .checkout-modal .cart-items h3,
+        .checkout-modal .order-form-fields h3 {
+            color: #c2185b;
+        }
+
+        .checkout-modal .cart-item-title {
+            color: #9c1456;
+        }
+
+        .order-form-fields input,
+        .order-form-fields select,
+        .order-form-fields textarea {
+            background: #ffffff !important;
+            color: #e91e7a !important;
+            caret-color: #e91e7a;
+            border-color: rgba(233, 30, 122, 0.35) !important;
+        }
+
+        .order-form-fields input::placeholder {
+            color: rgba(233, 30, 122, 0.42);
+        }
+
+        .favorites-modal .favorites-body {
+            color: #c2185b;
+        }
+
+        .favorites-modal .favorites-item-title {
+            color: #ad1457;
+        }
+
+        .favorites-modal .favorites-item-price {
+            color: #e91e7a;
+        }
+
+        .cart-postcard-option {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 18px 22px;
+            margin-bottom: 20px;
+            border: 1px solid #fce4ec;
+        }
+
+        .postcard-label {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            font-size: 17px;
+            font-family: 'Poppins-Regular', sans-serif;
+            color: #ad1457;
+            user-select: none;
+        }
+
+        .postcard-label input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            accent-color: #ff3083;
+            cursor: pointer;
+        }
+
+        .postcard-text-wrap {
+            margin-top: 14px;
+            display: none;
+        }
+
+        .postcard-text-wrap.visible {
+            display: block;
+        }
+
+        .postcard-text-wrap label {
+            display: block;
+            font-size: 14px;
+            color: #ad1457;
+            margin-bottom: 8px;
+            font-family: 'Poppins-Regular', sans-serif;
+        }
+
+        .postcard-textarea {
+            width: 100%;
+            min-height: 88px;
+            padding: 14px 16px;
+            border: 2px solid rgba(233, 30, 122, 0.35);
+            border-radius: 18px;
+            font-family: 'Poppins-Light', sans-serif;
+            font-size: 16px;
+            line-height: 1.45;
+            resize: vertical;
+            background: #ffffff !important;
+            color: #e91e7a !important;
+            caret-color: #e91e7a;
+        }
+
+        .postcard-textarea::placeholder {
+            color: rgba(233, 30, 122, 0.42);
+        }
+
+        .postcard-textarea:focus {
+            outline: none;
+            border-color: #f06292;
+        }
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .auth-modal-header, .checkout-header, .favorites-header {
+            background: linear-gradient(135deg, #ff9a9e, #ff6b8b);
+            padding: 20px;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .auth-modal-header h3, .checkout-header h3, .favorites-header h3 {
+            color: white;
+            font-size: 24px;
+            font-family: 'Poppins-Light Italic', sans-serif;
+        }
+
+        .close-modal, .close-favorites {
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .close-modal:hover, .close-favorites:hover {
+            transform: rotate(90deg);
+        }
+
+        .auth-modal-body {
+            padding: 30px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ffe0e0;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 10px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            font-family: 'Poppins-Regular', sans-serif;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .auth-tab.active {
+            color: #ff3083;
+            border-bottom: 3px solid #ff3083;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-family: 'Poppins-Regular', sans-serif;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ffe0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            font-family: 'Poppins-Light', sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff6b8b;
+        }
+
+        .auth-submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #ff9a9e, #ff6b8b);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-family: 'Poppins-Regular', sans-serif;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .auth-submit-btn:hover {
+            transform: scale(1.02);
+        }
+
+        /* Корзина (обновлённая) */
+        .cart-items {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 22px;
+            margin-bottom: 20px;
+            border: 1px solid #fce4ec;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .cart-item-info {
+            flex: 2;
+            min-width: 150px;
+        }
+
+        .cart-item-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .cart-item-price {
+            color: #ff3083;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 5px 10px;
+            border-radius: 25px;
+        }
+
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            background: #ff6b8b;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .quantity-btn:hover {
+            background: #ff3083;
+        }
+
+        .remove-item {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .order-form-fields {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 22px 20px;
+            margin: 20px 0;
+            border: 1px solid #fce4ec;
+        }
+
+        .order-form-fields h3 {
+            font-size: 22px;
+            color: #c2185b;
+            margin-bottom: 16px;
+            font-family: 'Poppins-Light Italic', sans-serif;
+        }
+
+        .order-form-fields label {
+            display: block;
+            margin-top: 12px;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: #ad1457;
+            font-family: 'Poppins-Regular', sans-serif;
+        }
+
+        .order-form-fields input,
+        .order-form-fields select {
+            width: 100%;
+            padding: 12px 16px;
+            margin: 0 0 4px 0;
+            border: 2px solid #f8bbd9;
+            border-radius: 25px;
+            font-family: 'Poppins-Light', sans-serif;
+            background: #fffafc;
+            color: #d63384;
+            caret-color: #e91e8c;
+        }
+
+        .order-form-fields input::placeholder {
+            color: rgba(214, 51, 132, 0.45);
+        }
+
+        .order-form-fields input:focus,
+        .order-form-fields select:focus {
+            outline: none;
+            border-color: #f06292;
+            background: #ffffff;
+        }
+
+        .contact-fields-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 8px 16px;
+            margin-bottom: 8px;
+        }
+
+        .delivery-zone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .delivery-option {
+            background: #fff5f5;
+            padding: 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .delivery-option:hover {
+            background: #ffe0e0;
+        }
+
+        .delivery-option.selected {
+            background: #ff6b8b;
+            color: white;
+        }
+
+        /* Новые стили для выбора доставки/самовывоза */
+        .delivery-type-selector {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .delivery-type-btn {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background: #fff5f5;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-family: 'Poppins-Light', sans-serif;
+            font-size: 16px;
+        }
+
+        .delivery-type-btn.selected {
+            background: #ff6b8b;
+            color: white;
+        }
+
+        .cart-total {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 22px;
+            margin: 20px 0;
+            text-align: right;
+            border: 1px solid #fce4ec;
+        }
+
+        .total-line {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .grand-total {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff3083;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #ffe0e0;
+        }
+
+        .checkout-final-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #ff9a9e, #ff6b8b);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 30px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        /* Профиль */
+        .profile-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 100%;
+            max-width: 400px;
+            height: 100%;
+            background: white;
+            z-index: 1002;
+            transition: right 0.3s ease;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+
+        .profile-panel.active {
+            right: 0;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, #ff9a9e, #ff6b8b);
+            padding: 30px;
+            color: white;
+        }
+
+        .profile-name {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .profile-email {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .profile-body {
+            padding: 30px;
+        }
+
+        .history-item {
+            background: #fff5f5;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+
+        .close-profile {
+            float: right;
+            font-size: 28px;
+            cursor: pointer;
+            color: white;
+        }
+
+        /* Избранное */
+        .favorites-body {
+            padding: 24px 26px 32px;
+        }
+
+        .favorites-empty {
+            text-align: center;
+            padding: 48px 24px;
+            color: #ad1457;
+            font-size: 17px;
+        }
+
+        .favorites-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 16px 12px;
+            border-bottom: 1px solid #fce4ec;
+            background: #ffffff;
+        }
+
+        .favorites-item-emoji {
+            font-size: 40px;
+        }
+
+        .favorites-item-info {
+            flex: 1;
+        }
+
+        .favorites-item-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .favorites-item-price {
+            color: #ff3083;
+            font-size: 16px;
+        }
+
+        .favorites-remove {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #ff4444;
+        }
+
+        .add-to-cart-fav {
+            background: linear-gradient(135deg, #ff9a9e, #ff6b8b);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* МЕНЮ-КАТАЛОГ (выезжает СЛЕВА) */
+        .catalog-menu-panel {
+            position: fixed;
+            top: 0;
+            left: -450px;
+            width: 100%;
+            max-width: 450px;
+            height: 100%;
+            background: white;
+            z-index: 2000;
+            transition: left 0.3s ease;
+            box-shadow: 5px 0 30px rgba(0,0,0,0.15);
+            overflow-y: auto;
+            font-family: 'Poppins-Light', sans-serif;
+        }
+
+        .catalog-menu-panel.active {
+            left: 0;
+        }
+
+        .catalog-menu-header {
+            background: linear-gradient(135deg, #ff9a9e, #ff6b8b);
+            padding: 25px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .catalog-menu-header h2 {
+            font-size: 28px;
+            font-family: 'Poppins-Light Italic', sans-serif;
+        }
+
+        .close-catalog-menu {
+            font-size: 32px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .close-catalog-menu:hover {
+            transform: rotate(90deg);
+        }
+
+        .catalog-menu-body {
+            padding: 20px;
+        }
+
+        .catalog-menu-category {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #ffe0e0;
+            padding-bottom: 15px;
+        }
+
+        .catalog-menu-category h3 {
+            font-size: 22px;
+            color: #ff3083;
+            margin-bottom: 15px;
+            font-family: 'Poppins-Regular', sans-serif;
+        }
+
+        .catalog-menu-category ul {
+            list-style: none;
+        }
+
+        .catalog-menu-category li {
+            padding: 10px 0;
+            border-bottom: 1px solid #fff0f0;
+        }
+
+        .catalog-menu-category a {
+            text-decoration: none;
+            color: #333;
+            font-size: 18px;
+            transition: all 0.3s;
+            cursor: pointer;
+            display: block;
+        }
+
+        .catalog-menu-category a:hover {
+            color: #ff3083;
+            padding-left: 10px;
+        }
+
+        /* ПОДВАЛ (ЧЁРНЫЙ, НА ВСЮ ШИРИНУ) */
+        .main-footer {
+            background: #1a1a1a;
+            color: #ccc;
+            padding: 50px 40px 30px;
+            width: 100%;
+            margin: 0;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-col h4 {
+            color: #ff6b8b;
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-family: 'Poppins-Regular', sans-serif;
+        }
+
+        .footer-col p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .footer-col a {
+            color: #ccc;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+
+        .footer-col a:hover {
+            color: #ff6b8b;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid #333;
+            font-size: 14px;
+        }
+
+        .footer-phone {
+            font-size: 22px;
+            color: #ff6b8b;
+            font-weight: bold;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 992px) {
+            .burger {
+                display: flex;
+                z-index: 1000;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 80px;
+                left: 0;
+                right: 0;
+                background: #ffd4d4;
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+                padding: 30px;
+                border-radius: 0 0 20px 20px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                z-index: 99;
+                font-family: Poppins;
+                font-style:italic;
+                
+            }
+            
+            .nav-links.active {
+                display: flex;
+                z-index: 1000;
+            }
+            
+            .nav-links a {
+                font-size: 24px;
+                z-index: 1000;
+            }
+            
+            .hero {
+                padding: 20px 20px 80px 20px;
+                z-index: 1000;
+            }
+            
+            .categories {
+                justify-content: flex-start;
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+
+            .category-btn {
+                padding: 10px 16px;
+                font-size: clamp(11px, 3.2vw, 16px);
+                z-index: 1000;
+            }
+            
+            .catalog-section {
+                padding: 40px 20px;
+                z-index: 1000;
+            }
+            
+            .section-title {
+                font-size: 36px;
+                z-index: 1000;
+            }
+            
+            .info-title {
+                font-size: 28px;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-section-outer {
+                padding: 28px clamp(12px, 4vw, 20px);
+                border-radius: 0;
+            }
+
+            .info-section {
+                padding: 34px 22px;
+            }
+            
+            .map-section {
+                grid-template-columns: 1fr;
+                padding: 0 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+            
+            .category-btn {
+                padding: 9px 14px;
+                font-size: clamp(10px, 3.5vw, 14px);
+            }
+            
+            .call-btn {
+                padding: 12px 35px;
+                font-size: 22px;
+            }
+            
+            .checkout-content {
+                padding: 15px;
+            }
+            
+            .slide {
+                flex: 0 0 100%;
+            }
+            
+            .slide img {
+                height: 250px;
+            }
+            
+            .slider-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 24px;
+            }
+            
+            .marquee-text {
+                font-size: 18px;
+                animation-duration: 15s;
+            }
+            
+            .marquee-container {
+                padding: 10px 0;
+            }
+            
+            .footer-grid {
+                gap: 30px;
+            }
+            
+            .main-footer {
+                padding: 40px 20px 25px;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title-block, .call-btn-wrapper, .categories {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            max-width: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <div class="top-bar">
+        <div class="menu-area" id="openCatalogBtn">
+            <div class="burger" id="burgerBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="menu-icon"><img src="image/логотип.svg" alt="not found" height="80" width="80"></div>
+            <span class="menu-text" id="menuText">Меню</span>
+        </div>
+
+        <div class="nav-links" id="navLinks">
+            <a onclick="scrollToCatalog()"><i>Каталог</i></a>
+            <a onclick="showProfile()"><i>Мой профиль</i></a>
+            <a><i>О нас</i></a>
+            <a><i>Где мы?</i></a>
+        </div>
+
+        <div class="icons-area">
+            <div class="logo">
+                <div class="logo-placeholder" style="background: transparent; box-shadow: none;"></div>
+            </div>
+            
+            <div class="icon-circle" id="favoritesHeartBtn">❤️</div>
+            <div class="icon-circle cart" id="cartBtn">
+                🛒
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+            <div class="icon-circle" id="profileIcon">👤</div>
+        </div>
+    </div>
+
+    <div class="title-block">
+        <p class="main-title">🌷 ЦВЕТОЧНАЯ КОРОБКА 🌷</p>
+        <p class="subtitle">Доставка цветов в Краснодаре</p>
+    </div>
+
+    <div class="call-btn-wrapper">
+        <button class="call-btn" id="callBtn">Заказать звонок</button>
+    </div>
+
+    <div class="categories">
+        <button class="category-btn" onclick="filterProducts('all')" >ВСЕ БУКЕТЫ</button>
+        <button class="category-btn" onclick="filterProducts('ready')">ГОТОВЫЕ БУКЕТЫ</button>
+        <button class="category-btn" onclick="filterProducts('custom')">КАСТОМНЫЕ БУКЕТЫ</button>
+        <button class="category-btn" onclick="filterProducts('hits')">ХИТЫ ПРОДАЖ</button>
+        <button class="category-btn" onclick="filterProducts('box')">КОРОБКИ С ЦВЕТАМИ</button>
+    </div>
+
+    <div class="flowers-decor">
+        <div class="flower"></div>
+        <div class="flower"></div>
+        <div class="flower"></div>
+        <div class="flower"></div>
+        <div class="flower"></div>
+    </div>
+</div>
+
+<!-- НОВАЯ СЕКЦИЯ С КАРТОЙ -->
+<div class="map-section">
+    <div class="map-info">
+        <h3>📍 Наш магазин</h3>
+        <p>Вы можете забрать заказ самостоятельно или заказать доставку</p>
+        <div class="address">
+            г. Краснодар, ул. Колхозная д. 5/1
+        </div>
+        <p>🕐 Режим работы: ежедневно с 9:00 до 21:00</p>
+        <p>📞 +7-938-479-79-17</p>
+        <p>✉️ info@flowerbox.ru</p>
+    </div>
+    <div class="map-container">
+        <div id="map"></div>
+    </div>
+</div>
+
+<div class="marquee-container">
+    <div class="marquee-text">
+        🌸 Лучшие цветы! Лучшие цветочные коробки! Самые вкусные цены только у НАС! Успей заказать наши хиты! Оформи заказ по телефону +7-938-479-79-17! Самая быстрая доставка в городе! Наш магазин находиться по адресу г. Краснодар ул. Колхозная д. 5|1      🌸
+    </div>
+</div>
+
+<div class="slider-container">
+    <div class="slider">
+        <div class="slides" id="mainSlider">
+           <div class="slide">
+    <img src="image/image 17.svg">
+    <div class="slide-caption">Доставка ВСЕГО за 2 часа</div>
+</div>
+           <div class="slide">
+    <img src="image/image 18.svg">
+    <div class="slide-caption">Открытка в подарок при заказа от 5.000 р.</div>
+</div>
+           <div class="slide">
+    <img src="image/image 19.svg">
+    <div class="slide-caption">Скидка по промокоду HELLTOTO</div>
+</div>
+           <div class="slide">
+    <img src="image/image 20.svg">
+    <div class="slide-caption">Шар "Сердце" в подарок при покупке от 10.000 р.</div>
+</div>
+        </div>
+    </div>
+    <div class="marquee-container">
+    <div class="marquee-text">
+        🌸 Лучшие цветы! Лучшие цветочные коробки! Самые вкусные цены только у НАС! Успей заказать наши хиты! Оформи заказ по телефону +7-938-479-79-17! Самая быстрая доставка в городе! Наш магазин находиться по адресу г. Краснодар ул. Колхозная д. 5|1      🌸
+    </div>
+</div>
+    <div class="slider-btn prev" id="sliderPrev">❮</div>
+    <div class="slider-btn next" id="sliderNext">❯</div>
+    <div class="slider-dots" id="sliderDots"></div>
+</div>
+
+<div class="new-sections">
+    <!-- Поводы для покупки -->
+    <div class="info-section-outer info-section-outer--reasons">
+    <div class="info-section">
+        <div class="info-title">Поводы для покупки букетов</div>
+        <div class="info-grid">
+            <div class="info-card">
+                <ul>
+                    <li>🌸 День рождения любимого человека</li>
+                    <li>💑 Романтическое свидание или признание в любви</li>
+                    <li>🎉 Юбилей или годовщина свадьбы</li>
+                    <li>😊 Без повода — просто порадовать близкого</li>
+                    <li>🙏 Извинение или примирение</li>
+                    <li>🏆 Достижение успеха или повышение</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    </div>
+<div class="marquee-container">
+    <div class="marquee-text">
+        🌸 Лучшие цветы! Лучшие цветочные коробки! Самые вкусные цены только у НАС! Успей заказать наши хиты! Оформи заказ по телефону +7-938-479-79-17! Самая быстрая доставка в городе! Наш магазин находиться по адресу г. Краснодар ул. Колхозная д. 5|1      🌸
+    </div>
+</div>
+    <!-- Как подготовимся -->
+    <div class="info-section-outer info-section-outer--process">
+    <div class="info-section">
+        <div class="info-title">Как мы подготовимся к заказу</div>
+        <div class="info-grid">
+            <div class="info-card">
+                <ul>
+                    <li>✨ Индивидуальный подход к каждому клиенту</li>
+                    <li>🎨 Создание уникального дизайна букета</li>
+                    <li>🤝 Поддержка на всех этапах работы</li>
+                </ul>
+            </div>
+            <div class="info-card">
+                <ul>
+                    <li>📋 Разработаем концепцию специально для вас
+                        <ul style="margin-top: 8px; margin-left: 20px;">
+                            <li>Учитываем все пожелания</li>
+                            <li>Подбираем самые свежие цветы</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="info-card">
+                <ul>
+                    <li>⚡ Быстрая и оперативная подготовка заказа</li>
+                    <li>🚚 Доставка в удобное для вас время</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    </div>
+<div class="marquee-container">
+    <div class="marquee-text">
+        🌸 Лучшие цветы! Лучшие цветочные коробки! Самые вкусные цены только у НАС! Успей заказать наши хиты! Оформи заказ по телефону +7-938-479-79-17! Самая быстрая доставка в городе! Наш магазин находиться по адресу г. Краснодар ул. Колхозная д. 5|1      🌸
+    </div>
+</div>
+    <!-- Отзывы -->
+    <div class="info-section-outer info-section-outer--reviews">
+    <div class="info-section">
+        <div class="info-title">Отзывы наших покупателей</div>
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">"Заказывала букет для мамы на день рождения. Цветы были невероятно свежие, упаковка шикарная! Доставили точно в срок. Спасибо большое!"</p>
+                <div class="review-author">Анна, Краснодар</div>
+            </div>
+            <div class="info-card">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">"Очень понравилось качество цветов. Заказывал розы для девушки, она была в восторге! Рекомендую всем, кто ценит красоту и свежесть."</p>
+                <div class="review-author">Дмитрий, Юбилейный</div>
+            </div>
+            <div class="info-card">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">"Уже не первый раз заказываю здесь цветы. Всегда свежие, красивые, доставка быстрая. Цены приятно радуют. Буду заказывать ещё!"</p>
+                <div class="review-author">Екатерина, Фестивальный</div>
+            </div>
+            <div class="info-card">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">"Отличный сервис! Помогли с выбором букета, учли все пожелания. Цветы простояли больше двух недель. Огромное спасибо!"</p>
+                <div class="review-author">Михаил, КСК</div>
+            </div>
+            <div class="info-card">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">"Самые лучшие цветы в городе! Заказывал коробку цветов для жены на годовщину. Она была счастлива. Доставка быстрая, цветы свежайшие."</p>
+                <div class="review-author">Алексей, Центр</div>
+            </div>
+            <div class="info-card">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">"Очень довольна сервисом! Цветы привезли точно ко времени, букет выглядел ещё лучше, чем на фото. Обязательно обращусь снова."</p>
+                <div class="review-author">Ольга, ЧМР</div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+<div class="marquee-container">
+    <div class="marquee-text">
+        🌸 Лучшие цветы! Лучшие цветочные коробки! Самые вкусные цены только у НАС! Успей заказать наши хиты! Оформи заказ по телефону +7-938-479-79-17! Самая быстрая доставка в городе! Наш магазин находиться по адресу г. Краснодар ул. Колхозная д. 5|1      🌸
+    </div>
+</div>
+<!-- Каталог товаров -->
+<div class="catalog-section" id="catalogSection">
+    <h2 class="section-title">Наши букеты</h2>
+    <div class="products-grid" id="productsGrid"></div>
+</div>
+
+<!-- ПОДВАЛ (ЧЁРНЫЙ, НА ВСЮ ШИРИНУ) -->
+<footer class="main-footer">
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>Цветочная коробка</h4>
+            <p>Доставка цветов в Краснодаре</p>
+            <p>Свежие цветы каждый день</p>
+            <p>💐 Индивидуальный подход</p>
+        </div>
+        <div class="footer-col">
+            <h4>Контакты</h4>
+            <p>📍 г. Краснодар, ул. Колхозная д. 5/1</p>
+            <p class="footer-phone">📞 +7-800-555-35-35</p>
+            <p>✉️ neobman@tochno.ru</p>
+        </div>
+        <div class="footer-col">
+            <h4>Информация</h4>
+            <a href="#" onclick="scrollToCatalog(); return false;">Каталог</a>
+            <a href="#" onclick="showProfile(); return false;">Мой профиль</a>
+            <a href="#">Акции</a>
+            <a href="#">Где мы?</a>
+            <a href="#">Как мы работаем?</a>
+        </div>
+        <div class="footer-col">
+            <h4>Политика</h4>
+            <a href="#">Политика защиты информации</a>
+            <a href="#">Обработка персональных данных</a>
+            <a href="#">Пользовательские соглашения</a>
+            <a href="#">Доступ к данным и информация</a>
+            <a href="#">Программа поддержки</a>
+            <a href="#">Программа помощи фондам</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <a> dev: y0tu   <sub>And</sub>   Ervinka</a>
+        <p>© 2025 Цветочная коробка. Все права защищены.</p>
+    </div>
+</footer>
+
+<!-- Модальное окно авторизации/регистрации -->
+<div class="auth-modal" id="authModal">
+    <div class="auth-modal-content">
+        <div class="auth-modal-header">
+            <h3>Добро пожаловать</h3>
+            <span class="close-modal" onclick="closeAuthModal()">&times;</span>
+        </div>
+        
+        <div style="display: flex; justify-content: center; padding: 20px 0 0 0; background: white;">
+            <img src="image/логотип.svg" alt="Логотип" style="width: 80px; height: 80px; object-fit: contain; border-radius: 50%; background: #fff5f5; padding: 10px;" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'80\' height=\'80\' viewBox=\'0 0 24 24\' fill=\'%23ff6b8b\'%3E%3Cpath d=\'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z\'/%3E%3C/svg%3E'">
+        </div>
+        
+        <div class="auth-modal-body">
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchAuthTab('login')">Вход</button>
+                <button class="auth-tab" onclick="switchAuthTab('register')">Регистрация</button>
+            </div>
+            
+            <div id="loginForm" class="auth-form active">
+                <form onsubmit="login(event)">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="auth-submit-btn">Войти</button>
+                </form>
+            </div>
+            
+            <div id="registerForm" class="auth-form">
+                <form onsubmit="register(event)">
+                    <div class="form-group">
+                        <label>Ваше имя</label>
+                        <input type="text" id="regName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="regEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль</label>
+                        <input type="password" id="regPassword" required>
+                    </div>
+                    <button type="submit" class="auth-submit-btn">Зарегистрироваться</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно корзины (ОБНОВЛЁННОЕ) -->
+<div class="checkout-modal" id="checkoutModal">
+    <div class="checkout-content">
+        <div class="checkout-header">
+            <h3>🛒 Ваш заказ</h3>
+            <span class="close-modal" onclick="closeCheckoutModal()" style="color: white; font-size: 28px; cursor: pointer; float: right;">&times;</span>
+            <div style="clear: both;"></div>
+        </div>
+        <div class="checkout-body" id="checkoutBody"></div>
+    </div>
+</div>
+
+<!-- Модальное окно избранного -->
+<div class="favorites-modal" id="favoritesModal">
+    <div class="favorites-content">
+        <div class="favorites-header">
+            <h3>❤️ Вам понравилось</h3>
+            <span class="close-favorites" onclick="closeFavoritesModal()">&times;</span>
+        </div>
+        <div class="favorites-body" id="favoritesBody">
+            <div class="favorites-empty">У вас пока нет понравившихся товаров</div>
+        </div>
+    </div>
+</div>
+
+<!-- Панель профиля -->
+<div class="profile-panel" id="profilePanel">
+    <div class="profile-header">
+        <span class="close-profile" onclick="closeProfile()">&times;</span>
+        <div class="profile-name" id="profileName">Гость</div>
+        <div class="profile-email" id="profileEmail">Не авторизован</div>
+    </div>
+    <div class="profile-body">
+        <h3>История покупок</h3>
+        <div id="historyList"></div>
+        <button class="auth-submit-btn" id="logoutBtnProfile" onclick="logout()" style="margin-top: 20px;">Выйти</button>
+    </div>
+</div>
+
+<!-- МЕНЮ-КАТАЛОГ (выезжает СЛЕВА) -->
+<div class="catalog-menu-panel" id="catalogMenuPanel">
+    <div class="catalog-menu-header">
+        <h2>📚 Каталог</h2>
+        <span class="close-catalog-menu" onclick="closeCatalogMenu()">&times;</span>
+    </div>
+    <div class="catalog-menu-body">
+        <div class="catalog-menu-category">
+            <h3>🌸 Букеты</h3>
+            <ul>
+                <li><a onclick="filterProducts('ready'); closeCatalogMenu();">Готовые букеты</a></li>
+                <li><a onclick="filterProducts('custom'); closeCatalogMenu();">Кастомные букеты</a></li>
+                <li><a onclick="filterProducts('hits'); closeCatalogMenu();">ХИТЫ продаж</a></li>
+                <li><a onclick="filterProducts('box'); closeCatalogMenu();">Цветочные коробки</a></li>
+                <li><a onclick="filterProducts('roses'); closeCatalogMenu();">Букеты из роз</a></li>
+                <li><a onclick="filterProducts('daisies'); closeCatalogMenu();">Букеты из ромашек</a></li>
+                <li><a onclick="filterProducts('tulips'); closeCatalogMenu();">Букеты из тюльпанов</a></li>
+                <li><a onclick="filterProducts('big'); closeCatalogMenu();">Букеты большие</a></li>
+                <li><a onclick="filterProducts('small'); closeCatalogMenu();">Букеты малые</a></li>
+                <li><a onclick="filterProducts('artificial'); closeCatalogMenu();">Искусственные цветы</a></li>
+                <li><a onclick="filterProducts('cards'); closeCatalogMenu();">Открытки</a></li>
+                <li><a onclick="filterProducts('balloons'); closeCatalogMenu();">Воздушные шары</a></li>
+            </ul>
+        </div>
+        <div class="catalog-menu-category">
+            <h3>🏷️ Акции</h3>
+            <ul>
+                <li><a href="#" onclick="showPromotions(); closeCatalogMenu();">Все акции</a></li>
+            </ul>
+        </div>
+        <div class="catalog-menu-category">
+            <h3>🖼️ Галерея</h3>
+            <ul>
+                <li><a href="#" onclick="showGallery(); closeCatalogMenu();">Наши работы</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ===== ТОВАРЫ (букеты) =====
+    let products = [
+        { id: 1, name: "Нежность пионов", price: 3500, category: "ready", description: "Нежные пионы в пастельных тонах", emoji: "🌸" },
+        { id: 2, name: "Красная страсть", price: 4200, category: "ready", description: "12 алых роз в элегантной упаковке", emoji: "🌹" },
+        { id: 3, name: "Белоснежное совершенство", price: 3800, category: "hits", description: "Белые лилии, хризантемы и эустомы", emoji: "⚪" },
+        { id: 4, name: "Розовая мечта", price: 4500, category: "custom", description: "Авторский букет из 25 розовых роз", emoji: "💗" },
+        { id: 5, name: "Цветочная коробка", price: 3900, category: "box", description: "Нежные цветы в стильной коробке", emoji: "📦" },
+        { id: 6, name: "Солнечное настроение", price: 3600, category: "hits", description: "Желтые тюльпаны и герберы", emoji: "🌻" },
+        { id: 7, name: "Лавандовое поле", price: 4100, category: "custom", description: "Лаванда, эустома и сухоцветы", emoji: "💜" },
+        { id: 8, name: "101 красная роза 60см", price: 25500, category: "hits", description: "Шикарный букет из 101 красной розы", emoji: "❤️" },
+        { id: 9, name: "Розовый рай", price: 5200, category: "roses", description: "25 розовых роз в авторской упаковке", emoji: "🌹" },
+        { id: 10, name: "Ромашковое поле", price: 2800, category: "daisies", description: "Нежные ромашки с гипсофилой", emoji: "🌼" },
+        { id: 11, name: "Тюльпановый восторг", price: 3200, category: "tulips", description: "15 разноцветных тюльпанов", emoji: "🌷" },
+        { id: 12, name: "Королевский букет", price: 8900, category: "big", description: "Роскошный букет из 51 розы", emoji: "👑" },
+        { id: 13, name: "Мини-очарование", price: 1800, category: "small", description: "Маленький букетик для сюрприза", emoji: "💝" },
+        { id: 14, name: "Вечная красота", price: 3500, category: "artificial", description: "Искусственные цветы высшего качества", emoji: "✨" },
+        { id: 15, name: "Поздравительная открытка", price: 300, category: "cards", description: "Открытка ручной работы", emoji: "💌" },
+        { id: 16, name: "Шар-сердце", price: 500, category: "balloons", description: "Гелиевый шар в форме сердца", emoji: "🎈" }
+    ];
+
+    // ===== ДАННЫЕ =====
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+    let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+    let purchaseHistory = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+    // Районы доставки с доплатой
+    const deliveryZones = [
+        "Юбилейный микрорайон 200р", "Сельхоз институт 200р", "Западный обход 200р",
+        "Фестивальный микрорайон 300р", "Кожзавод 300р", "Славянский микрорайон 300р",
+        "Руборойный 500р", "Красная площадь 700р", "КСК/КМР 600р", "Аэропорт 1000р",
+        "РИП 700р", "ККБ 600р", "ШМР 500р", "ЧМР 700р", "АэроурЗИП 400р",
+        "Елизаветинская 700р", "Энка 500р", "Яблоновский 800р", "Новая Адыгея 600р", "Авиагородок 400р"
+    ];
+
+    // Переменные для оформления заказа
+    let deliveryType = "pickup"; // pickup или delivery
+    let selectedDeliveryZone = "";
+    let orderDate = "";
+    let orderTime = "";
+    let orderCity = "Краснодар";
+    let deliveryClass = "Стандарт";
+    let orderCustomerName = "";
+    let orderAddress = "";
+    let orderRecipientName = "";
+    let orderPhone = "";
+    let currentCategory = 'all';
+    const POSTCARD_PRICE = 150;
+    let addPostcard150 = localStorage.getItem('cartPostcard150') === '1';
+    let postcardMessage = localStorage.getItem('postcardMessage') || '';
+
+    function togglePostcard(on) {
+        addPostcard150 = !!on;
+        localStorage.setItem('cartPostcard150', addPostcard150 ? '1' : '0');
+        if (!addPostcard150) {
+            postcardMessage = '';
+            localStorage.removeItem('postcardMessage');
+        }
+        renderCartModal();
+    }
+
+    function setPostcardMessage(text) {
+        postcardMessage = String(text ?? '');
+        localStorage.setItem('postcardMessage', postcardMessage);
+    }
+
+    // ===== СОХРАНЕНИЕ =====
+    function saveData() {
+        localStorage.setItem('cart', JSON.stringify(cart));
+        localStorage.setItem('users', JSON.stringify(users));
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        localStorage.setItem('purchaseHistory', JSON.stringify(purchaseHistory));
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+        updateCartCount();
+    }
+
+    function updateCartCount() {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const cartCountElem = document.getElementById('cartCount');
+        if (cartCountElem) cartCountElem.textContent = totalItems;
+    }
+
+    // ===== УПРАВЛЕНИЕ КОРЗИНОЙ =====
+    function addToCart(productId) {
+        const product = products.find(p => p.id === productId);
+        const existingItem = cart.find(item => item.id === productId);
+        
+        if (existingItem) {
+            existingItem.quantity++;
+        } else {
+            cart.push({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                quantity: 1,
+                emoji: product.emoji
+            });
+        }
+        
+        saveData();
+        showToast(`✅ ${product.name} добавлен в корзину!`);
+    }
+
+    function updateQuantity(productId, change) {
+        const item = cart.find(i => i.id === productId);
+        if (item) {
+            const newQuantity = item.quantity + change;
+            if (newQuantity <= 0) {
+                cart = cart.filter(i => i.id !== productId);
+            } else {
+                item.quantity = newQuantity;
+            }
+            saveData();
+            renderCartModal();
+        }
+    }
+
+    function removeFromCart(productId) {
+        cart = cart.filter(i => i.id !== productId);
+        saveData();
+        renderCartModal();
+    }
+
+    // ===== ОТОБРАЖЕНИЕ КОРЗИНЫ (ОБНОВЛЁННОЕ) =====
+    function escAttr(v) {
+        return String(v ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+    }
+
+    function renderCartModal() {
+        const container = document.getElementById('checkoutBody');
+        if (!container) return;
+        
+        if (cart.length === 0) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 50px 24px; background: #ffffff; color: #ad1457;">
+                    <h3 style="font-size: 22px; margin-bottom: 12px;">🛒 Корзина пуста</h3>
+                    <p style="margin-bottom: 20px; font-size: 16px;">Добавьте товары из каталога</p>
+                    <button class="auth-submit-btn" onclick="closeCheckoutModal()">Закрыть</button>
+                </div>
+            `;
+            return;
+        }
+        
+        const itemsTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        const postcardFee = addPostcard150 ? POSTCARD_PRICE : 0;
+        let deliveryPrice = 0;
+        if (deliveryType === 'delivery' && selectedDeliveryZone) {
+            const match = selectedDeliveryZone.match(/(\d+)/);
+            deliveryPrice = match ? parseInt(match[0]) : 0;
+        }
+        let total = itemsTotal + postcardFee + deliveryPrice;
+        
+        const today = new Date().toISOString().split('T')[0];
+        
+        container.innerHTML = `
+            <div class="cart-items">
+                <h3 style="margin-bottom: 20px;">📦 Товары</h3>
+                ${cart.map(item => `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-title">${item.emoji} ${item.name}</div>
+                            <div class="cart-item-price">${item.price} ₽ / шт</div>
+                        </div>
+                        <div class="cart-item-controls">
+                            <div class="quantity-control">
+                                <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                                <span class="quantity-number">${item.quantity}</span>
+                                <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                            </div>
+                            <button class="remove-item" onclick="removeFromCart(${item.id})">Удалить</button>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            
+            <div class="cart-postcard-option">
+                <label class="postcard-label">
+                    <input type="checkbox" id="postcardCheckbox" ${addPostcard150 ? 'checked' : ''} onchange="togglePostcard(this.checked)">
+                    <span>💌 Добавить открытку за ${POSTCARD_PRICE} ₽</span>
+                </label>
+                <div class="postcard-text-wrap ${addPostcard150 ? 'visible' : ''}" id="postcardTextWrap">
+                    <label for="postcardTextInput">Текст на открытке</label>
+                    <textarea class="postcard-textarea" id="postcardTextInput" rows="4" placeholder="Напишите поздравление или пожелание — мы перенесём на открытку"></textarea>
+                </div>
+            </div>
+            
+            <div class="order-form-fields">
+                <h3>Контактные данные</h3>
+                <div class="contact-fields-grid">
+                    <div>
+                        <label for="orderCustomerNameInput">Ваше имя</label>
+                        <input type="text" id="orderCustomerNameInput" placeholder="Как к вам обращаться" value="${escAttr(orderCustomerName)}">
+                    </div>
+                    <div>
+                        <label for="orderPhoneInput">Телефон</label>
+                        <input type="tel" id="orderPhoneInput" placeholder="+7 (___) ___-__-__" value="${escAttr(orderPhone)}">
+                    </div>
+                    <div>
+                        <label for="orderRecipientNameInput">Имя получателя</label>
+                        <input type="text" id="orderRecipientNameInput" placeholder="Кому вручить букет" value="${escAttr(orderRecipientName)}">
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <label for="orderAddressInput">Адрес</label>
+                        <input type="text" id="orderAddressInput" placeholder="Улица, дом, квартира, подъезд" value="${escAttr(orderAddress)}">
+                    </div>
+                </div>
+                <h3 style="margin-top: 22px;">Оформление заказа</h3>
+                
+                <div class="delivery-type-selector">
+                    <button class="delivery-type-btn ${deliveryType === 'pickup' ? 'selected' : ''}" onclick="setDeliveryType('pickup')">📦 Самовывоз</button>
+                    <button class="delivery-type-btn ${deliveryType === 'delivery' ? 'selected' : ''}" onclick="setDeliveryType('delivery')">🚚 Доставка</button>
+                </div>
+                
+                ${deliveryType === 'delivery' ? `
+                    <div class="delivery-zone-grid" id="deliveryZonesGrid">
+                        ${deliveryZones.map(zone => `
+                            <div class="delivery-option ${selectedDeliveryZone === zone ? 'selected' : ''}" onclick="selectDeliveryZone('${zone.replace(/'/g, "\\'")}')">
+                                📍 ${zone}
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${selectedDeliveryZone ? `<div style="margin-top: 15px; padding: 10px; background: #fff0f0; border-radius: 15px;">✅ Выбрано: ${selectedDeliveryZone}</div>` : ''}
+                ` : ''}
+                
+                <label>Дата: <input type="date" id="orderDateInput" min="${today}" value="${orderDate}"></label>
+                <label>Время: <input type="time" id="orderTimeInput" value="${orderTime}"></label>
+                <label>Город: <input type="text" id="orderCityInput" placeholder="Краснодар" value="${orderCity}"></label>
+                <label>Класс доставки: 
+                    <select id="deliveryClassInput">
+                        <option ${deliveryClass === 'Стандарт' ? 'selected' : ''}>Стандарт</option>
+                        <option ${deliveryClass === 'Бизнес' ? 'selected' : ''}>Бизнес</option>
+                        <option ${deliveryClass === 'Экспресс' ? 'selected' : ''}>Экспресс</option>
+                    </select>
+                </label>
+            </div>
+            
+            <div class="cart-total">
+                <div class="total-line">Товары: <span>${itemsTotal} ₽</span></div>
+                ${addPostcard150 ? `<div class="total-line">Открытка: <span>${POSTCARD_PRICE} ₽</span></div>` : ''}
+                ${deliveryType === 'delivery' && selectedDeliveryZone ? `<div class="total-line">Доставка: <span>${deliveryPrice} ₽</span></div>` : ''}
+                <div class="grand-total">ИТОГО: ${total} ₽</div>
+                <button class="checkout-final-btn" onclick="confirmOrderFinal()">✅ Оформить заказ</button>
+            </div>
+        `;
+        
+        const dateInput = document.getElementById('orderDateInput');
+        const timeInput = document.getElementById('orderTimeInput');
+        const cityInput = document.getElementById('orderCityInput');
+        const classSelect = document.getElementById('deliveryClassInput');
+        const nameInput = document.getElementById('orderCustomerNameInput');
+        const phoneInput = document.getElementById('orderPhoneInput');
+        const recipientInput = document.getElementById('orderRecipientNameInput');
+        const addressInput = document.getElementById('orderAddressInput');
+        
+        if (dateInput) dateInput.onchange = (e) => { orderDate = e.target.value; };
+        if (timeInput) timeInput.onchange = (e) => { orderTime = e.target.value; };
+        if (cityInput) cityInput.onchange = (e) => { orderCity = e.target.value; };
+        if (classSelect) classSelect.onchange = (e) => { deliveryClass = e.target.value; };
+        if (nameInput) nameInput.oninput = (e) => { orderCustomerName = e.target.value.trim(); };
+        if (phoneInput) phoneInput.oninput = (e) => { orderPhone = e.target.value.trim(); };
+        if (recipientInput) recipientInput.oninput = (e) => { orderRecipientName = e.target.value.trim(); };
+        if (addressInput) addressInput.oninput = (e) => { orderAddress = e.target.value.trim(); };
+
+        const postcardTa = document.getElementById('postcardTextInput');
+        if (postcardTa) {
+            postcardTa.value = postcardMessage;
+            postcardTa.oninput = (e) => { setPostcardMessage(e.target.value); };
+        }
+    }
+    
+    function setDeliveryType(type) {
+        deliveryType = type;
+        if (type === 'pickup') selectedDeliveryZone = "";
+        renderCartModal();
+    }
+    
+    function selectDeliveryZone(zone) {
+        selectedDeliveryZone = zone;
+        renderCartModal();
+    }
+
+    function confirmOrderFinal() {
+        if (cart.length === 0) {
+            showToast('Корзина пуста!');
+            return;
+        }
+        
+        if (deliveryType === 'delivery' && !selectedDeliveryZone) {
+            showToast('Выберите район доставки');
+            return;
+        }
+
+        if (!orderCustomerName) {
+            showToast('Укажите ваше имя');
+            return;
+        }
+        if (!orderPhone || orderPhone.replace(/\D/g, '').length < 10) {
+            showToast('Укажите корректный номер телефона');
+            return;
+        }
+        if (!orderRecipientName) {
+            showToast('Укажите имя получателя');
+            return;
+        }
+        if (!orderAddress) {
+            showToast('Укажите адрес');
+            return;
+        }
+        
+        if (!orderDate) {
+            showToast('Выберите дату');
+            return;
+        }
+        
+        const today = new Date().toISOString().split('T')[0];
+        if (orderDate < today) {
+            showToast('Нельзя выбрать прошедшую дату');
+            return;
+        }
+
+        if (addPostcard150 && !postcardMessage.trim()) {
+            showToast('Напишите текст для открытки');
+            return;
+        }
+        
+        const itemsTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        const postcardFee = addPostcard150 ? POSTCARD_PRICE : 0;
+        const deliveryPrice = (deliveryType === 'delivery' && selectedDeliveryZone) ? (parseInt(selectedDeliveryZone.match(/(\d+)/)?.[0]) || 0) : 0;
+        const total = itemsTotal + postcardFee + deliveryPrice;
+        
+        const order = {
+            id: Date.now(),
+            date: orderDate || new Date().toLocaleDateString(),
+            time: orderTime || "сейчас",
+            city: orderCity || "Краснодар",
+            deliveryClass: deliveryClass,
+            deliveryType: deliveryType,
+            deliveryZone: deliveryType === 'delivery' ? selectedDeliveryZone : "Самовывоз",
+            items: [...cart],
+            subtotal: itemsTotal,
+            postcard: addPostcard150,
+            postcardPrice: postcardFee,
+            postcardText: addPostcard150 ? postcardMessage.trim() : '',
+            deliveryPrice: deliveryPrice,
+            total: total,
+            customerName: currentUser ? currentUser.name : "Гость",
+            orderCustomerName: orderCustomerName,
+            orderPhone: orderPhone,
+            orderRecipientName: orderRecipientName,
+            orderAddress: orderAddress
+        };
+        
+        purchaseHistory.push(order);
+        localStorage.setItem('purchaseHistory', JSON.stringify(purchaseHistory));
+        
+        if (currentUser) {
+            currentUser.history = purchaseHistory.filter(h => h.customerName === currentUser.name);
+            localStorage.setItem(`history_${currentUser.email}`, JSON.stringify(currentUser.history));
+        }
+        
+        cart = [];
+        addPostcard150 = false;
+        postcardMessage = '';
+        localStorage.setItem('cartPostcard150', '0');
+        localStorage.removeItem('postcardMessage');
+        selectedDeliveryZone = "";
+        orderDate = "";
+        orderTime = "";
+        deliveryType = "pickup";
+        orderCustomerName = "";
+        orderAddress = "";
+        orderRecipientName = "";
+        orderPhone = "";
+        saveData();
+        
+        showToast(`✅ Заказ оформлен! Сумма: ${total} ₽. Спасибо!`);
+        
+        closeCheckoutModal();
+        
+        if (currentUser) {
+            showProfile();
+        }
+    }
+
+    function showCheckout() {
+        if (cart.length === 0) {
+            showToast('Корзина пуста! Добавьте товары для оформления заказа.');
+            return;
+        }
+        renderCartModal();
+        document.getElementById('checkoutModal').classList.add('active');
+    }
+
+    function closeCheckoutModal() {
+        document.getElementById('checkoutModal').classList.remove('active');
+    }
+
+    // ===== ФИЛЬТРАЦИЯ ТОВАРОВ =====
+    function displayProducts(filterCategory = 'all') {
+        currentCategory = filterCategory;
+        const grid = document.getElementById('productsGrid');
+        if (!grid) return;
+        
+        let filtered = products;
+        if (filterCategory !== 'all') {
+            filtered = products.filter(p => p.category === filterCategory);
+        }
+        
+        grid.innerHTML = filtered.map(product => `
+            <div class="product-card">
+                <div class="product-image">${product.emoji}</div>
+                <div class="product-info">
+                    <h3 class="product-title">${product.name}</h3>
+                    <p class="product-desc">${product.description}</p>
+                    <div class="product-price">${product.price} ₽</div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="buy-btn" onclick="addToCart(${product.id})">В корзину</button>
+                        <button class="buy-btn" style="background: #ffb6c1; color: #333; width: 60px;" onclick="toggleFavorite(${product.id})">
+                            ${favorites.includes(product.id) ? '❤️' : '🤍'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function filterProducts(category) {
+        displayProducts(category);
+        document.getElementById('catalogSection')?.scrollIntoView({ behavior: 'smooth' });
+        closeCatalogMenu();
+    }
+
+    function scrollToCatalog() {
+        document.getElementById('catalogSection')?.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ===== ИЗБРАННОЕ =====
+    function toggleFavorite(productId) {
+        if (favorites.includes(productId)) {
+            favorites = favorites.filter(id => id !== productId);
+            showToast('💔 Удалено из избранного');
+        } else {
+            favorites.push(productId);
+            showToast('❤️ Добавлено в избранное');
+        }
+        saveData();
+        displayProducts(currentCategory);
+        updateFavoritesModal();
+    }
+
+    function isFavorite(productId) {
+        return favorites.includes(productId);
+    }
+
+    function updateFavoritesModal() {
+        const container = document.getElementById('favoritesBody');
+        if (!container) return;
+        
+        if (favorites.length === 0) {
+            container.innerHTML = '<div class="favorites-empty">💔 У вас пока нет понравившихся товаров</div>';
+            return;
+        }
+        
+        const favoriteProducts = products.filter(p => favorites.includes(p.id));
+        container.innerHTML = favoriteProducts.map(product => `
+            <div class="favorites-item">
+                <div class="favorites-item-emoji">${product.emoji}</div>
+                <div class="favorites-item-info">
+                    <div class="favorites-item-title">${product.name}</div>
+                    <div class="favorites-item-price">${product.price} ₽</div>
+                </div>
+                <button class="add-to-cart-fav" onclick="addToCart(${product.id}); closeFavoritesModal();">🛒</button>
+                <button class="favorites-remove" onclick="removeFromFavorites(${product.id})">🗑️</button>
+            </div>
+        `).join('');
+    }
+
+    function removeFromFavorites(productId) {
+        favorites = favorites.filter(id => id !== productId);
+        saveData();
+        updateFavoritesModal();
+        displayProducts(currentCategory);
+        showToast('Товар удален из избранного');
+    }
+
+    function openFavoritesModal() {
+        updateFavoritesModal();
+        document.getElementById('favoritesModal').classList.add('active');
+    }
+
+    function closeFavoritesModal() {
+        document.getElementById('favoritesModal').classList.remove('active');
+    }
+
+    // ===== МЕНЮ-КАТАЛОГ =====
+    function openCatalogMenu() {
+        document.getElementById('catalogMenuPanel').classList.add('active');
+    }
+
+    function closeCatalogMenu() {
+        document.getElementById('catalogMenuPanel').classList.remove('active');
+    }
+
+    // ===== ТОСТ-УВЕДОМЛЕНИЯ =====
+    function showToast(message) {
+        let toast = document.getElementById('customToast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'customToast';
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 30px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #333;
+                color: white;
+                padding: 12px 24px;
+                border-radius: 50px;
+                font-family: 'Poppins-Light', sans-serif;
+                z-index: 9999;
+                opacity: 0;
+                transition: opacity 0.3s;
+                pointer-events: none;
+                white-space: nowrap;
+            `;
+            document.body.appendChild(toast);
+        }
+        toast.textContent = message;
+        toast.style.opacity = '1';
+        setTimeout(() => {
+            toast.style.opacity = '0';
+        }, 2000);
+    }
+
+    // ===== АВТОРИЗАЦИЯ И ПРОФИЛЬ =====
+    function register(event) {
+        event.preventDefault();
+        const name = document.getElementById('regName').value;
+        const email = document.getElementById('regEmail').value;
+        const password = document.getElementById('regPassword').value;
+        
+        if (users.find(u => u.email === email)) {
+            showToast('Пользователь с таким email уже существует');
+            return;
+        }
+        
+        const newUser = { name, email, password, history: [] };
+        users.push(newUser);
+        currentUser = newUser;
+        saveData();
+        
+        showToast(`Добро пожаловать, ${name}!`);
+        closeAuthModal();
+        updateProfileInfo();
+    }
+
+    function login(event) {
+        event.preventDefault();
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        
+        const user = users.find(u => u.email === email && u.password === password);
+        
+        if (user) {
+            currentUser = user;
+            saveData();
+            showToast(`Добро пожаловать, ${user.name}!`);
+            closeAuthModal();
+            updateProfileInfo();
+        } else {
+            showToast('Неверный email или пароль');
+        }
+    }
+
+    function logout() {
+        currentUser = null;
+        saveData();
+        showToast('Вы вышли из аккаунта');
+        closeProfile();
+        updateProfileInfo();
+    }
+
+    function showProfile() {
+        updateProfileInfo();
+        document.getElementById('profilePanel')?.classList.add('active');
+    }
+
+    function closeProfile() {
+        document.getElementById('profilePanel')?.classList.remove('active');
+    }
+
+    function closeAuthModal() {
+        document.getElementById('authModal')?.classList.remove('active');
+    }
+
+    function updateProfileInfo() {
+        const profileName = document.getElementById('profileName');
+        const profileEmail = document.getElementById('profileEmail');
+        const historyList = document.getElementById('historyList');
+        const logoutBtn = document.getElementById('logoutBtnProfile');
+        
+        if (profileName && profileEmail && historyList) {
+            if (currentUser) {
+                profileName.textContent = currentUser.name;
+                profileEmail.textContent = currentUser.email;
+                if (logoutBtn) logoutBtn.style.display = 'block';
+                
+                const userHistory = purchaseHistory.filter(h => h.customerName === currentUser.name);
+                
+                if (userHistory.length === 0) {
+                    historyList.innerHTML = '<p>История покупок пуста</p>';
+                } else {
+                    historyList.innerHTML = userHistory.map(order => `
+                        <div class="history-item">
+                            <strong>Заказ #${order.id}</strong><br>
+                            Дата: ${order.date} ${order.time}<br>
+                            ${order.orderCustomerName ? `Контакт: ${order.orderCustomerName}, ${order.orderPhone || ''}<br>` : ''}
+                            ${order.orderRecipientName ? `Получатель: ${order.orderRecipientName}<br>` : ''}
+                            ${order.orderAddress ? `Адрес: ${order.orderAddress}<br>` : ''}
+                            Город: ${order.city}<br>
+                            Класс: ${order.deliveryClass}<br>
+                            ${order.deliveryZone !== "Самовывоз" ? `Доставка: ${order.deliveryZone}<br>` : 'Самовывоз<br>'}
+                            ${order.postcard ? `Открытка: +${order.postcardPrice || 150} ₽${order.postcardText ? `<br>Текст: ${order.postcardText.replace(/</g, '&lt;')}` : ''}<br>` : ''}
+                            Сумма: ${order.total} ₽<br>
+                            Товары: ${order.items.map(i => `${i.name} (${i.quantity} шт.)`).join(', ')}
+                        </div>
+                    `).join('');
+                }
+            } else {
+                profileName.textContent = 'Гость';
+                profileEmail.textContent = 'Не авторизован';
+                historyList.innerHTML = '<p>Войдите в аккаунт, чтобы видеть историю покупок</p>';
+                if (logoutBtn) logoutBtn.style.display = 'none';
+            }
+        }
+    }
+
+    function switchAuthTab(tab) {
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const tabs = document.querySelectorAll('.auth-tab');
+        
+        if (tab === 'login') {
+            loginForm?.classList.add('active');
+            registerForm?.classList.remove('active');
+            tabs[0]?.classList.add('active');
+            tabs[1]?.classList.remove('active');
+        } else {
+            loginForm?.classList.remove('active');
+            registerForm?.classList.add('active');
+            tabs[0]?.classList.remove('active');
+            tabs[1]?.classList.add('active');
+        }
+    }
+
+    function showPromotions() {
+        showToast('🎉 Акции: Скидка 10% на первый заказ! Промокод: FLOWER10');
+    }
+
+    function showGallery() {
+        showToast('🖼️ Галерея работ скоро будет доступна!');
+    }
+
+    // ===== СЛАЙДЕР =====
+    const slidesContainer = document.getElementById('mainSlider');
+    const prevBtn = document.getElementById('sliderPrev');
+    const nextBtn = document.getElementById('sliderNext');
+    const dotsContainer = document.getElementById('sliderDots');
+
+    let slides = document.querySelectorAll('#mainSlider .slide');
+    let slidesPerView = window.innerWidth <= 768 ? 1 : 2;
+    let totalGroups = Math.ceil(slides.length / slidesPerView);
+    let currentGroup = 0;
+    let autoInterval;
+
+    function updateSlidesPerView() {
+        slidesPerView = window.innerWidth <= 768 ? 1 : 2;
+        totalGroups = Math.ceil(slides.length / slidesPerView);
+        if (currentGroup >= totalGroups) currentGroup = totalGroups - 1;
+        if (currentGroup < 0) currentGroup = 0;
+        updateSlider();
+        createDots();
+    }
+
+    function updateSlider() {
+        const shiftPercent = -(currentGroup * 100);
+        slidesContainer.style.transform = `translateX(${shiftPercent}%)`;
+        updateDots();
+    }
+
+    function createDots() {
+        if (!dotsContainer) return;
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < totalGroups; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (i === currentGroup) dot.classList.add('active');
+            dot.addEventListener('click', () => {
+                currentGroup = i;
+                updateSlider();
+                resetAutoPlay();
+            });
+            dotsContainer.appendChild(dot);
+        }
+    }
+
+    function updateDots() {
+        const dots = document.querySelectorAll('.dot');
+        dots.forEach((dot, i) => {
+            if (i === currentGroup) dot.classList.add('active');
+            else dot.classList.remove('active');
+        });
+    }
+
+    function nextSlide() {
+        if (currentGroup + 1 < totalGroups) {
+            currentGroup++;
+        } else {
+            currentGroup = 0;
+        }
+        updateSlider();
+    }
+
+    function prevSlide() {
+        if (currentGroup - 1 >= 0) {
+            currentGroup--;
+        } else {
+            currentGroup = totalGroups - 1;
+        }
+        updateSlider();
+    }
+
+    function startAutoPlay() {
+        autoInterval = setInterval(() => {
+            nextSlide();
+        }, 8000);
+    }
+
+    function resetAutoPlay() {
+        clearInterval(autoInterval);
+        startAutoPlay();
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); resetAutoPlay(); });
+    if (nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); resetAutoPlay(); });
+
+    window.addEventListener('resize', () => {
+        updateSlidesPerView();
+        resetAutoPlay();
+    });
+
+    updateSlidesPerView();
+    startAutoPlay();
+
+    // ===== КАРТА (Яндекс.Карты) =====
+    function initMap() {
+        const map = new ymaps.Map('map', {
+            center: [45.03547, 38.97531],
+            zoom: 15,
+            controls: ['zoomControl', 'fullscreenControl']
+        });
+        const placemark = new ymaps.Placemark([45.03547, 38.97531], {
+            hintContent: 'Цветочная коробка',
+            balloonContent: 'г. Краснодар, ул. Колхозная д. 5/1'
+        });
+        map.geoObjects.add(placemark);
+    }
+    
+    if (typeof ymaps !== 'undefined') {
+        ymaps.ready(initMap);
+    }
+
+    // ===== ИНИЦИАЛИЗАЦИЯ =====
+    document.addEventListener('DOMContentLoaded', () => {
+        displayProducts('all');
+        updateCartCount();
+        updateProfileInfo();
+        
+        // Бургер-меню
+        const burger = document.getElementById('burgerBtn');
+        const menuText = document.getElementById('menuText');
+        const openCatalogBtn = document.getElementById('openCatalogBtn');
+        
+        function openMenu() {
+            openCatalogMenu();
+        }
+        
+        if (burger) burger.addEventListener('click', openMenu);
+        if (menuText) menuText.addEventListener('click', openMenu);
+        if (openCatalogBtn) openCatalogBtn.addEventListener('click', openMenu);
+        
+        // Мобильная навигация
+        const navLinks = document.getElementById('navLinks');
+        const mobileNavBtn = document.createElement('div');
+        mobileNavBtn.className = 'burger';
+        mobileNavBtn.style.marginRight = '10px';
+        mobileNavBtn.innerHTML = '<span></span><span></span><span></span>';
+        mobileNavBtn.onclick = (e) => {
+            e.stopPropagation();
+            navLinks.classList.toggle('active');
+        };
+        
+        if (window.innerWidth <= 992) {
+            const topBar = document.querySelector('.top-bar');
+            const existingBurger = topBar.querySelector('.burger:not(#burgerBtn)');
+            if (!existingBurger) {
+                topBar.insertBefore(mobileNavBtn, topBar.firstChild);
+            }
+        }
+        
+        // Кнопка заказа звонка
+        const callBtn = document.getElementById('callBtn');
+        if (callBtn) {
+            callBtn.addEventListener('click', () => {
+                showToast('📞 Спасибо! Наш менеджер перезвонит вам в ближайшее время.');
+            });
+        }
+        
+        // Кнопка корзины
+        const cartBtn = document.getElementById('cartBtn');
+        if (cartBtn) cartBtn.addEventListener('click', showCheckout);
+        
+        // Кнопка профиля
+        const profileIcon = document.getElementById('profileIcon');
+        if (profileIcon) {
+            profileIcon.addEventListener('click', () => {
+                if (currentUser) {
+                    showProfile();
+                } else {
+                    document.getElementById('authModal')?.classList.add('active');
+                }
+            });
+        }
+        
+        // Кнопка избранного
+        const favoritesBtn = document.getElementById('favoritesHeartBtn');
+        if (favoritesBtn) {
+            favoritesBtn.addEventListener('click', openFavoritesModal);
+        }
+        
+        // Закрытие модальных окон по клику вне
+        window.onclick = (event) => {
+            const authModal = document.getElementById('authModal');
+            const checkoutModal = document.getElementById('checkoutModal');
+            const favoritesModal = document.getElementById('favoritesModal');
+            const catalogMenu = document.getElementById('catalogMenuPanel');
+            if (event.target === authModal) closeAuthModal();
+            if (event.target === checkoutModal) closeCheckoutModal();
+            if (event.target === favoritesModal) closeFavoritesModal();
+            if (event.target === catalogMenu) closeCatalogMenu();
+        };
+        
+        // Добавляем функции в глобальную область
+        window.showCheckout = showCheckout;
+        window.closeCheckoutModal = closeCheckoutModal;
+        window.updateQuantity = updateQuantity;
+        window.removeFromCart = removeFromCart;
+        window.confirmOrderFinal = confirmOrderFinal;
+        window.selectDeliveryZone = selectDeliveryZone;
+        window.setDeliveryType = setDeliveryType;
+        window.addToCart = addToCart;
+        window.filterProducts = filterProducts;
+        window.register = register;
+        window.login = login;
+        window.logout = logout;
+        window.showProfile = showProfile;
+        window.closeProfile = closeProfile;
+        window.closeAuthModal = closeAuthModal;
+        window.switchAuthTab = switchAuthTab;
+        window.scrollToCatalog = scrollToCatalog;
+        window.toggleFavorite = toggleFavorite;
+        window.openFavoritesModal = openFavoritesModal;
+        window.closeFavoritesModal = closeFavoritesModal;
+        window.removeFromFavorites = removeFromFavorites;
+        window.openCatalogMenu = openCatalogMenu;
+        window.closeCatalogMenu = closeCatalogMenu;
+        window.showPromotions = showPromotions;
+        window.showGallery = showGallery;
+        window.togglePostcard = togglePostcard;
+        window.setPostcardMessage = setPostcardMessage;
+    });
+</script>
+</body>
+</html>
